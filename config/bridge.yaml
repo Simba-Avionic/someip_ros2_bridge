@@ -1,0 +1,59 @@
+# FcRadioService <-> the gs_interfaces topics used by gs_web_app.
+
+definitions: ../../system_definition/someip
+
+network:
+  local_ip: 127.0.0.1
+
+services:
+  FcRadioService:
+    instance_id: 1
+    client_port: 10319
+
+    events:
+      RadioStatusEvent:
+        topic: mavlink/radio_status
+        type: gs_interfaces/msg/RadioStatus
+        frame_id: someip_fc_radio
+        fields:
+          rxerrors: rxerrors
+          fixed: fixed
+          rssi: rssi
+          remrssi: remrssi
+          txbuf: txbuf
+          noise: noise
+          remnoise: remnoise
+
+      GSEOxidizerTankPressEvent:
+        topic: tanking/sensors
+        type: gs_interfaces/msg/TankingSensors
+        frame_id: someip_gse_oxidizer
+        fields:
+          pressure_bar: {scale: 0.01}
+
+      GSERocketMassEvent:
+        topic: tanking/load_cells
+        type: gs_interfaces/msg/LoadCells
+        frame_id: someip_gse_load_cells
+        fields:
+          combined_raw_mass_kg: {scale: 0.01}
+
+      GSEPressureFeedSystemTankPressEvent:
+        topic: tanking/pressurizer/sensors
+        type: gs_interfaces/msg/TankingSensors
+        frame_id: someip_gse_pressurizer
+        fields:
+          pressure_bar: {scale: 0.01}
+
+    methods:
+      SetGSEOxidizerFillValve:
+        topic: tanking/commands
+        type: gs_interfaces/msg/TankingCommands
+        field: valve_feed_oxidizer
+        allowed: {0: closed, 1: open, 2: half_open}
+
+      SetGSEPFSFillValve:
+        topic: tanking/commands
+        type: gs_interfaces/msg/TankingCommands
+        field: valve_feed_pressurizer
+        allowed: {0: closed, 1: open, 2: half_open}

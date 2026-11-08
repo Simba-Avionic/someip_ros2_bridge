@@ -1,0 +1,28 @@
+name: Test bridge
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: someip_ros2_bridge
+      - uses: actions/checkout@v4
+        with:
+          repository: Simba-Avionic/system_definition
+          path: system_definition
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+      - name: Install
+        working-directory: someip_ros2_bridge
+        run: python -m pip install -e '.[test]'
+      - name: Check (tests incl. loopback SOME/IP, lint, format, types, config)
+        working-directory: someip_ros2_bridge
+        run: make check

@@ -1,0 +1,28 @@
+# Methods without an argument. No `field`: every message is a call.
+# With a bool `field`: a button, called when the field turns true.
+
+definitions: ../../system_definition/someip
+
+network:
+  local_ip: 127.0.0.1
+
+services:
+  FileLoggerApp:
+    instance_id: 1
+    client_port: 10319
+    methods:
+      Start:
+        topic: logger/start
+        type: std_msgs/msg/Empty
+      Stop:
+        topic: logger/stop
+        type: std_msgs/msg/Empty
+
+  PrimerService:
+    instance_id: 1
+    client_port: 10320
+    methods:
+      StartPrime:
+        topic: primer/start
+        type: std_msgs/msg/Bool
+        field: data
